@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SiteOps — screenshots</title>
+<style>
+ body{margin:0;background:#0B1220;color:#E7ECF4;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+ header{padding:34px 28px 10px;max-width:1100px;margin:0 auto}
+ .tag{color:#34D3A4;font-size:11px;letter-spacing:2.5px;font-weight:700}
+ h1{margin:8px 0 6px;font-size:26px;letter-spacing:-.02em}
+ p.sub{color:#8FA3C0;font-size:13.5px;margin:0;line-height:1.6}
+ main{max-width:1100px;margin:0 auto;padding:22px 28px 60px}
+ section{margin-top:34px}
+ h2{font-size:15px;margin:0 0 3px;color:#fff}
+ .note{font-size:12px;color:#7E90AC;margin:0 0 14px}
+ figure{margin:0 0 22px;border:1px solid rgba(255,255,255,.1);border-radius:14px;overflow:hidden;background:#111A2C}
+ img{display:block;width:100%;height:auto}
+ figcaption{padding:9px 14px;font-size:12px;color:#9AAEC9;border-top:1px solid rgba(255,255,255,.07)}
+ .grid{display:grid;gap:20px;grid-template-columns:1fr}
+ @media(min-width:800px){.grid.two{grid-template-columns:1fr 1fr}}
+ .phone{max-width:340px;margin:0 auto}
+</style></head>
+<body>
+<header>
+  <div class="tag">SITEOPS</div>
+  <h1>Screenshots of the running product</h1>
+  <p class="sub">Captured from the live preview by an automated browser session, using a real registered account.
+  Audit requests show Google's actual provider response — scores appear only when PageSpeed Insights returns them.</p>
+</header>
+<main>
+  <section>
+    <h2>Marketing site</h2>
+    <p class="note">Public landing page — services, process, plans, FAQ.</p>
+    <figure><img src="landing-hero.png" alt="SiteOps landing page hero"><figcaption>Landing page (1440×950)</figcaption></figure>
+    <figure><img src="landing-full.png" alt="Full landing page"><figcaption>Full landing page, top to bottom</figcaption></figure>
+  </section>
+
+  <section>
+    <h2>Customer portal</h2>
+    <p class="note">Signed-in experience at /app — dashboard, websites, audits, notifications.</p>
+    <figure><img src="dashboard-empty.png" alt="Customer dashboard"><figcaption>Dashboard for a new account</figcaption></figure>
+    <figure><img src="websites.png" alt="Website management"><figcaption>Website management</figcaption></figure>
+    <div class="grid two">
+      <figure><img src="audit-request.png" alt="Request an audit"><figcaption>Requesting an audit</figcaption></figure>
+      <figure><img src="audits.png" alt="Audit requests list"><figcaption>Audit requests with provider status</figcaption></figure>
+    </div>
+    <figure><img src="notifications.png" alt="Notifications"><figcaption>Notifications</figcaption></figure>
+  </section>
+
+  <section>
+    <h2>Authentication</h2>
+    <figure><img src="login.png" alt="Sign in page"><figcaption>Customer sign in (split layout, branded panel)</figcaption></figure>
+  </section>
+
+  <section>
+    <h2>Operations console</h2>
+    <p class="note">Separate admin application at /admin/login, role-gated and database-controlled.</p>
+    <figure><img src="admin-dashboard.png" alt="Admin dashboard"><figcaption>Console overview</figcaption></figure>
+    <div class="grid two">
+      <figure><img src="admin-audit-queue.png" alt="Admin audit queue"><figcaption>Audit queue</figcaption></figure>
+      <figure><img src="admin-customers.png" alt="Admin customers"><figcaption>Customer management</figcaption></figure>
+    </div>
+  </section>
+
+  <section>
+    <h2>Mobile browser</h2>
+    <p class="note">Responsive layout at 390×844. This is the web app adapting; the native Expo app is not built yet.</p>
+    <figure class="phone"><img src="mobile-landing.png" alt="Landing page on a phone"><figcaption>Landing page at 390px wide</figcaption></figure>
+  </section>
+</main>
+</body></html>

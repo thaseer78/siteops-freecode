@@ -1,0 +1,583 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Design tokens ──────────────────────────────────────────────────────────
+   The `ink` scale is variable-driven so the same markup reads correctly on the
+   crisp light surfaces (admin) and the obsidian customer surfaces. Setting
+   data-theme="dark" flips headings to white and body copy to zinc. */
+@layer base {
+  :root {
+    --ink-950: 13 12 17;
+    --ink-900: 17 24 39;      /* headings */
+    --ink-800: 31 41 55;
+    --ink-700: 55 65 81;
+    --ink-600: 82 82 91;      /* body */
+    --ink-500: 113 113 122;   /* muted */
+    --ink-400: 161 161 170;
+
+    --surface: #ffffff;
+    --surface-2: #fafafc;
+    --surface-3: #f4f2fa;
+    --line: #eae8f2;
+    --page: #fafafc;
+    --accent-tint: #f3e8ff;
+
+    /* Landing-page motion contract (see the Motion section at the bottom).
+       Durations and easing are shared so every animation feels like one system. */
+    --ease-out-soft: cubic-bezier(.2, .7, .2, 1);
+    --dur-fast: 150ms;
+    --dur-base: 300ms;
+    --dur-slow: 600ms;
+    --dur-ambient: 1200ms;
+    --stagger: 60ms;
+  }
+
+  [data-theme='dark'] {
+    color-scheme: dark;
+    --ink-950: 9 8 12;
+    --ink-900: 255 255 255;
+    --ink-800: 244 244 245;
+    --ink-700: 228 228 231;
+    --ink-600: 212 212 216;
+    --ink-500: 161 161 170;
+    --ink-400: 113 113 122;
+
+    --surface: #16151d;
+    --surface-2: #121118;
+    --surface-3: #1d1b26;
+    --line: #262432;
+    --page: #0f0e13;
+    --accent-tint: rgba(124, 58, 237, 0.16);
+  }
+
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    @apply bg-surface2 text-ink-600 antialiased;
+    font-feature-settings: 'ss01' on, 'cv11' on;
+  }
+  h1, h2, h3, h4 { @apply font-display tracking-[-0.025em]; }
+  ::selection { background: #ddd6fe; color: #2e1065; }
+  :focus-visible { outline: 2px solid #8b5cf6; outline-offset: 2px; border-radius: 6px; }
+  input, select, textarea, button { font: inherit; }
+  .tnum, .font-display { font-variant-numeric: tabular-nums; }
+}
+
+@layer components {
+  .card {
+    @apply rounded-2xl border border-line bg-surface;
+    box-shadow: 0 4px 20px rgba(17, 12, 34, 0.04);
+  }
+  [data-theme='dark'] .card { box-shadow: 0 1px 0 rgba(255, 255, 255, 0.03) inset, 0 18px 40px -28px rgba(0, 0, 0, 0.9); }
+  .card-pad { @apply p-5 sm:p-6; }
+
+  .label { @apply mb-1.5 block text-[12.5px] font-medium text-ink-600; }
+  .input {
+    @apply w-full rounded-xl border border-line bg-surface px-3.5 py-2.5 text-[14.5px] text-ink-900
+      placeholder:text-ink-500/60 transition
+      focus:border-primary-500 focus:outline-none focus:ring-4 focus:ring-primary-500/15;
+  }
+  [data-theme='dark'] .input { background: #1b1924; border-color: #2f2c3d; }
+
+  .btn {
+    @apply inline-flex select-none items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-[14px] font-semibold
+      transition active:scale-[.985] disabled:cursor-not-allowed disabled:opacity-55;
+  }
+  .btn-primary { @apply btn bg-primary-600 text-white shadow-sm hover:bg-primary-700; }
+  .btn-accent { @apply btn bg-primary-600 text-white shadow-sm hover:bg-primary-700; }
+  .btn-ghost { @apply btn border border-line bg-surface text-ink-800 hover:border-primary-200 hover:bg-surface2; }
+  .btn-quiet { @apply btn text-ink-600 hover:bg-ink-900/[.05] hover:text-ink-900; }
+  .btn-danger { @apply btn border border-rose-200 bg-rose-50 text-rose-700 hover:bg-rose-100; }
+
+  .chip { @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11.5px] font-semibold; }
+  .table-head { @apply px-4 py-3 text-left text-[10.5px] font-semibold uppercase tracking-[.09em] text-ink-500; }
+  .table-cell { @apply px-4 py-3.5 align-middle text-[13.5px] text-ink-700; }
+
+  .nav-link {
+    @apply flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-[13.5px] font-medium text-ink-500 transition
+      hover:bg-ink-900/[.06] hover:text-ink-900;
+  }
+  /* Dark customer sidebar: soft plum pill on the active route. */
+  [data-theme='dark'] .nav-link { color: #a1a1aa; }
+  [data-theme='dark'] .nav-link:hover { background: rgba(255, 255, 255, 0.05); color: #fff; }
+  .nav-link-active,
+  [data-theme='dark'] .nav-link-active {
+    background: linear-gradient(90deg, rgba(124, 58, 237, 0.28), rgba(124, 58, 237, 0.12));
+    color: #ffffff;
+    box-shadow: inset 0 0 0 1px rgba(168, 85, 247, 0.28);
+  }
+  /* Light admin sidebar: soft lavender pill. */
+  [data-theme='light'] .nav-link-active {
+    background: #ede9fe;
+    color: #7c3aed;
+    box-shadow: none;
+  }
+  [data-theme='light'] .nav-link-active svg { color: #7c3aed; }
+
+  .nav-link-light { @apply flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-[13.5px] font-medium text-ink-600 transition hover:bg-surface2 hover:text-ink-900; }
+  .nav-link-light-active { @apply bg-primary-100 text-primary-700; }
+
+  .skeleton { @apply animate-pulseSoft rounded-lg bg-ink-900/[.07]; }
+
+  /* Marketing helpers */
+  .eyebrow {
+    @apply inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[12px] font-semibold uppercase tracking-[.06em];
+  }
+  .eyebrow-light { @apply eyebrow border border-line bg-primary-50 text-primary-700; }
+  .eyebrow-dark { @apply eyebrow border border-white/[.12] bg-white/[.06] text-primary-300; }
+  .pill-cta { @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-[14px] font-semibold transition active:scale-[.985]; }
+
+  /* Marketing container: full-width desktop grid, generous gutters. */
+  .shell { @apply mx-auto w-full max-w-7xl px-6 lg:px-10; }
+  /* Eyebrows that pass contrast on both surfaces. */
+  .eyebrow-dark { color: #C4B5FD; }
+  .eyebrow-light { color: #6D28D9; }
+  /* Body copy on obsidian — zinc-300, not zinc-400, to clear 4.5:1. */
+  .on-dark-body { color: #C9C7D4; }
+  .on-dark-muted { color: #A9A6B8; }
+}
+
+/* Deep-plum organic wash used on obsidian marketing sections. */
+.plum-glow {
+  background-image:
+    radial-gradient(60% 55% at 18% 0%, rgba(124, 58, 237, 0.28), transparent 62%),
+    radial-gradient(50% 50% at 88% 12%, rgba(192, 132, 252, 0.16), transparent 60%),
+    radial-gradient(70% 60% at 50% 110%, rgba(30, 21, 51, 0.9), transparent 70%);
+}
+.lavender-glow {
+  background-image:
+    radial-gradient(45% 45% at 92% 0%, rgba(192, 132, 252, 0.16), transparent 60%),
+    radial-gradient(40% 40% at 4% 100%, rgba(139, 92, 246, 0.1), transparent 62%);
+}
+.hairline-grid {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+/* Abstract wave for the dark "How it works" band. */
+.wave-accent {
+  background-image: radial-gradient(120% 80% at 50% 130%, rgba(124, 58, 237, 0.32), transparent 62%);
+}
+.scrollbar-thin::-webkit-scrollbar { height: 8px; width: 8px; }
+.scrollbar-thin::-webkit-scrollbar-thumb { background: rgba(124, 58, 237, 0.25); border-radius: 999px; }
+
+/* ── Dark-surface status notes ─────────────────────────────────────────────
+   The status boxes are written with light tints (bg-*-50 / text-*-900). On the
+   obsidian surfaces those need a translucent tint so they stay legible. */
+[data-theme='dark'] .bg-primary-50 { background-color: rgba(124, 58, 237, 0.14); }
+[data-theme='dark'] .bg-primary-100 { background-color: rgba(124, 58, 237, 0.22); }
+[data-theme='dark'] .text-primary-900,
+[data-theme='dark'] .text-primary-800 { color: #DDD6FE; }
+[data-theme='dark'] .border-primary-200 { border-color: rgba(168, 85, 247, 0.3); }
+[data-theme='dark'] .bg-amber-50 { background-color: rgba(245, 158, 11, 0.13); }
+[data-theme='dark'] .text-amber-900,
+[data-theme='dark'] .text-amber-800 { color: #FCD34D; }
+[data-theme='dark'] .border-amber-200 { border-color: rgba(245, 158, 11, 0.32); }
+[data-theme='dark'] .bg-red-50,
+[data-theme='dark'] .bg-rose-50 { background-color: rgba(239, 68, 68, 0.13); }
+[data-theme='dark'] .text-red-700,
+[data-theme='dark'] .text-red-800,
+[data-theme='dark'] .text-rose-700 { color: #FCA5A5; }
+[data-theme='dark'] .border-red-200,
+[data-theme='dark'] .border-rose-200 { border-color: rgba(239, 68, 68, 0.32); }
+[data-theme='dark'] code { background-color: rgba(255, 255, 255, 0.08); color: #EDE9FE; }
+
+@media print {
+  .no-print { display: none !important; }
+}
+
+/* ══ Landing motion system ══════════════════════════════════════════════════
+   One shared contract: only `transform` and `opacity` animate, everything is
+   reversible from JS by toggling `data-revealed`, and `prefers-reduced-motion`
+   collapses straight to the final state with no looping.
+
+   Reveal usage: <div className="reveal" style={{'--d': '3'}}>
+   The `--d` index is multiplied by the 60ms stagger.                          */
+
+.reveal {
+  opacity: 0;
+  transform: translate3d(0, 24px, 0);
+  transition:
+    opacity var(--dur-slow) var(--ease-out-soft),
+    transform var(--dur-slow) var(--ease-out-soft);
+  transition-delay: calc(var(--d, 0) * var(--stagger));
+}
+.reveal[data-revealed='true'] { opacity: 1; transform: none; }
+/* Variants used for card grids / timelines. */
+.reveal-left { transform: translate3d(-24px, 0, 0); }
+.reveal-scale { transform: scale(.97); }
+
+/* Scroll progress bar. Width is driven by a CSS var set from rAF-throttled JS. */
+.scroll-progress {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 60;
+  height: 2px;
+  transform-origin: 0 50%;
+  transform: scaleX(var(--progress, 0));
+  background: linear-gradient(90deg, #7C3AED, #C084FC);
+  pointer-events: none;
+  will-change: transform;
+}
+
+/* Frosted navbar once the page has scrolled. */
+.nav-scrolled {
+  background-color: rgba(11, 6, 21, .72);
+  backdrop-filter: blur(14px) saturate(1.4);
+  -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  border-bottom-color: rgba(255, 255, 255, .08);
+}
+
+/* ── Hero ─────────────────────────────────────────────────────────────────── */
+/* Word-by-word blur-to-sharp headline reveal. Each word is wrapped in a span
+   with its own delay; the span never changes layout, so CLS stays at 0. */
+.word-rise {
+  display: inline-block;
+  opacity: 0;
+  filter: blur(8px);
+  transform: translate3d(0, .34em, 0);
+  animation: word-rise var(--dur-ambient) var(--ease-out-soft) forwards;
+  animation-delay: calc(var(--i, 0) * 70ms);
+}
+@keyframes word-rise {
+  to { opacity: 1; filter: blur(0); transform: none; }
+}
+
+/* Slow gradient shimmer on the accent headline line. */
+.text-shimmer {
+  background-image: linear-gradient(96deg, #C4B5FD 0%, #F5F3FF 22%, #A78BFA 44%, #C4B5FD 66%, #F5F3FF 88%, #C4B5FD 100%);
+  background-size: 260% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: text-shimmer 9s linear infinite;
+}
+@keyframes text-shimmer {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+/* Drifting violet orbs. `transform` only; long 20–30s loops. */
+.orb {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(90px);
+  pointer-events: none;
+  will-change: transform;
+  animation: orb-drift var(--orb-duration, 26s) ease-in-out infinite alternate;
+}
+@keyframes orb-drift {
+  0%   { transform: translate3d(0, 0, 0) scale(1); }
+  50%  { transform: translate3d(3.5%, -5%, 0) scale(1.07); }
+  100% { transform: translate3d(-3%, 4%, 0) scale(.96); }
+}
+
+/* ── Score card ───────────────────────────────────────────────────────────── */
+/* Score ring: conic-gradient masked ring whose sweep is a CSS var. The needle
+   of the sweep is animated from JS via rAF; transform/opacity only, no reflow. */
+.score-ring {
+  background: conic-gradient(from -90deg, #10B981 calc(var(--sweep, 0) * 1%), #ECECF3 0);
+}
+/* Gentle float on the whole card. */
+.float-soft { animation: float-soft 7s ease-in-out infinite; }
+@keyframes float-soft {
+  0%, 100% { transform: translate3d(0, -3px, 0); }
+  50%      { transform: translate3d(0, 3px, 0); }
+}
+/* Desktop-only pointer tilt: JS sets --rx/--ry, CSS composes it. */
+.tilt {
+  transform: perspective(1200px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition: transform var(--dur-base) var(--ease-out-soft);
+  transform-style: preserve-3d;
+}
+.tilt-active { transition: transform 120ms linear; }
+
+/* Metric bars fill from 0 → value once revealed. `scaleX` keeps it composited. */
+.bar-fill {
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+  transition: transform var(--dur-ambient) var(--ease-out-soft);
+  transition-delay: calc(240ms + var(--d, 0) * 90ms);
+}
+[data-revealed='true'] .bar-fill { transform: scaleX(var(--v, 1)); }
+
+/* Badge spring-in, played last. */
+.spring-in {
+  opacity: 0;
+  transform: translate3d(0, 10px, 0) scale(.82);
+}
+.spring-in[data-revealed='true'] {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity var(--dur-base) var(--ease-out-soft) 900ms,
+    transform var(--dur-slow) cubic-bezier(.2, 1.5, .4, 1) 900ms;
+}
+
+/* Scan line sweeping once across the dashboard mock. */
+.scan-line {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 38%;
+  background: linear-gradient(180deg, transparent, rgba(168, 85, 247, .22), transparent);
+  opacity: 0;
+  pointer-events: none;
+}
+[data-revealed='true'] .scan-line { animation: scan-sweep 2.4s var(--ease-out-soft) 400ms 1; }
+@keyframes scan-sweep {
+  0%   { opacity: 0; transform: translate3d(0, -100%, 0); }
+  18%  { opacity: 1; }
+  82%  { opacity: 1; }
+  100% { opacity: 0; transform: translate3d(0, 300%, 0); }
+}
+
+/* ── CTA buttons ──────────────────────────────────────────────────────────── */
+/* Soft glow pulse — opacity only, so it cannot shift layout. */
+.cta-pulse { position: relative; isolation: isolate; }
+.cta-pulse::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  z-index: -1;
+  border-radius: inherit;
+  background: radial-gradient(closest-side, rgba(168, 85, 247, .55), transparent);
+  opacity: 0;
+  animation: cta-glow 3.6s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes cta-glow {
+  0%, 100% { opacity: .18; transform: scale(.98); }
+  50%      { opacity: .5;  transform: scale(1.02); }
+}
+/* Arrow slides on hover/focus. */
+.cta-arrow { transition: transform var(--dur-base) var(--ease-out-soft); }
+.group\/cta:hover .cta-arrow,
+.group\/cta:focus-visible .cta-arrow { transform: translateX(3px); }
+/* Magnetic pull: JS writes --mx/--my in px (max ±4). */
+.magnetic {
+  transform: translate3d(var(--mx, 0px), var(--my, 0px), 0);
+  transition: transform var(--dur-base) var(--ease-out-soft);
+}
+
+/* ── Cards ────────────────────────────────────────────────────────────────── */
+/* Hover lift of 4px + a spotlight that follows the cursor. The spotlight is a
+   radial-gradient whose centre is set from JS (no layout impact). */
+.spot-card {
+  position: relative;
+  transform: translate3d(0, 0, 0);
+  transition:
+    transform var(--dur-base) var(--ease-out-soft),
+    border-color var(--dur-base) var(--ease-out-soft),
+    box-shadow var(--dur-base) var(--ease-out-soft);
+}
+.spot-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    220px circle at var(--mx, 50%) var(--my, 0%),
+    rgba(168, 85, 247, .16),
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity var(--dur-base) var(--ease-out-soft);
+  pointer-events: none;
+}
+.spot-card:hover::before,
+.spot-card:focus-within::before { opacity: 1; }
+.spot-card:hover,
+.spot-card:focus-within {
+  transform: translate3d(0, -4px, 0);
+  border-color: rgba(168, 85, 247, .45);
+  box-shadow: 0 22px 48px -30px rgba(124, 58, 237, .55);
+}
+@media (hover: none) {
+  .spot-card:hover { transform: none; box-shadow: none; }
+  .spot-card:hover::before { opacity: 0; }
+}
+
+/* ── Steps: connector draws with scroll ───────────────────────────────────── */
+.step-track {
+  position: absolute;
+  background: rgba(255, 255, 255, .1);
+}
+.step-track-fill {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, #7C3AED, #C084FC);
+  transform-origin: 0 50%;
+  transform: scaleX(var(--step-progress, 0));
+  transition: transform 120ms linear;
+}
+/* Vertical variant (mobile timeline). */
+.step-track-v .step-track-fill { transform-origin: 50% 0; transform: scaleY(var(--step-progress, 0)); }
+.step-dot {
+  position: relative;
+  transition:
+    box-shadow var(--dur-base) var(--ease-out-soft),
+    background-color var(--dur-base) var(--ease-out-soft),
+    transform var(--dur-base) var(--ease-out-soft);
+}
+.step-dot[data-lit='true'] {
+  box-shadow: 0 0 0 6px rgba(124, 58, 237, .18), 0 12px 28px -12px rgba(124, 58, 237, .9);
+  transform: scale(1.04);
+}
+
+/* ── Growth plan ──────────────────────────────────────────────────────────── */
+/* Rotating conic-gradient border, drawn as a masked pseudo-element so the card
+   interior stays clean. transform-only rotation, 12s. */
+.conic-border { position: relative; }
+.conic-border::before {
+  content: '';
+  position: absolute;
+  inset: -1.5px;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: conic-gradient(from 0deg, #7C3AED, #C084FC, #F5F3FF, #A855F7, #7C3AED);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: .9;
+  animation: conic-spin 12s linear infinite;
+  pointer-events: none;
+}
+@keyframes conic-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+/* Badge shimmer sweep. */
+.badge-shimmer { position: relative; overflow: hidden; }
+.badge-shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, .55) 50%, transparent 65%);
+  transform: translate3d(-120%, 0, 0);
+  animation: badge-shimmer 4.5s var(--ease-out-soft) infinite;
+}
+@keyframes badge-shimmer {
+  0%, 62% { transform: translate3d(-120%, 0, 0); }
+  100%    { transform: translate3d(120%, 0, 0); }
+}
+/* Checkmarks drawn in sequence (stroke-dashoffset on an SVG path). */
+.tick path {
+  stroke-dasharray: 24;
+  stroke-dashoffset: 24;
+}
+[data-revealed='true'] .tick path {
+  animation: tick-draw var(--dur-base) var(--ease-out-soft) forwards;
+  animation-delay: calc(320ms + var(--d, 0) * 80ms);
+}
+@keyframes tick-draw { to { stroke-dashoffset: 0; } }
+
+/* ── FAQ accordion ────────────────────────────────────────────────────────── */
+/* Height animation via grid-template-rows 0fr → 1fr; the 1px change is
+   sub-pixel and cannot cause CLS because it happens on user action. */
+.faq-body {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--dur-base) var(--ease-out-soft);
+}
+.faq-item[data-open='true'] .faq-body { grid-template-rows: 1fr; }
+.faq-body > div { overflow: hidden; }
+.faq-answer {
+  opacity: 0;
+  transform: translate3d(0, -4px, 0);
+  transition:
+    opacity var(--dur-fast) var(--ease-out-soft),
+    transform var(--dur-fast) var(--ease-out-soft);
+}
+.faq-item[data-open='true'] .faq-answer {
+  opacity: 1;
+  transform: none;
+  transition-delay: 100ms;
+}
+.faq-icon { transition: transform var(--dur-base) var(--ease-out-soft); }
+.faq-item[data-open='true'] .faq-icon { transform: rotate(45deg); }
+
+/* ── Stats ────────────────────────────────────────────────────────────────── */
+.live-dot { position: relative; }
+.live-dot::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background: inherit;
+  animation: live-ping 2.4s var(--ease-out-soft) infinite;
+}
+@keyframes live-ping {
+  0%   { opacity: .55; transform: scale(1); }
+  70%  { opacity: 0;   transform: scale(2.6); }
+  100% { opacity: 0;   transform: scale(2.6); }
+}
+
+/* ── Mobile drawer ────────────────────────────────────────────────────────── */
+.drawer-panel {
+  transform: translate3d(100%, 0, 0);
+  transition: transform var(--dur-base) var(--ease-out-soft);
+}
+.drawer-panel[data-open='true'] { transform: none; }
+.drawer-scrim {
+  opacity: 0;
+  transition: opacity var(--dur-base) var(--ease-out-soft);
+}
+.drawer-scrim[data-open='true'] { opacity: 1; }
+
+/* ── Reduced motion ───────────────────────────────────────────────────────── */
+/* Everything lands in its final state immediately; no looping, no blur, no
+   drift. `!important` is deliberate: it must beat component-level delays. */
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .reveal-left,
+  .reveal-scale,
+  .spring-in {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .word-rise {
+    opacity: 1 !important;
+    filter: none !important;
+    transform: none !important;
+    animation: none !important;
+  }
+  .text-shimmer {
+    animation: none !important;
+    background: none !important;
+    -webkit-background-clip: border-box !important;
+    background-clip: border-box !important;
+    color: #C4B5FD !important;
+  }
+  .orb,
+  .float-soft,
+  .cta-pulse::after,
+  .conic-border::before,
+  .badge-shimmer::after,
+  .scan-line,
+  .live-dot::after,
+  .skeleton {
+    animation: none !important;
+  }
+  .orb { opacity: .55; }
+  .scan-line { display: none; }
+  .tilt,
+  .magnetic,
+  .spot-card,
+  .spot-card:hover {
+    transform: none !important;
+  }
+  .bar-fill { transform: scaleX(var(--v, 1)) !important; transition: none !important; }
+  .tick path { stroke-dashoffset: 0 !important; animation: none !important; }
+  .drawer-panel,
+  .drawer-scrim,
+  .faq-body,
+  .faq-answer,
+  .faq-icon,
+  .nav-scrolled {
+    transition: none !important;
+  }
+  html { scroll-behavior: auto !important; }
+}

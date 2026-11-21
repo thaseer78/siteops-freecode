@@ -1,0 +1,13 @@
+node_modules/
+dist/
+data/
+# Freecode workspace-internal markers (not part of the project)
+.freecode-source-ready
+.freecode/
+.env
+.env.local
+.siteops/
+*.log
+mobile/node_modules/
+mobile/.expo/
+.DS_Store
